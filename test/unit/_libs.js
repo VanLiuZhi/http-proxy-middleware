@@ -1,8 +1,8 @@
 module.exports = {
-  configFactory: require('../../lib/config-factory'),
-  contextMatcher: require('../../lib/context-matcher'),
-  handlers: require('../../lib/handlers'),
-  Logger: require('../../lib/logger'),
-  pathRewriter: require('../../lib/path-rewriter'),
-  router: require('../../lib/router')
-}
+  configFactory: require('../../dist/config-factory'),
+  contextMatcher: require('../../dist/context-matcher'),
+  handlers: require('../../dist/handlers'),
+  Logger: require('../../dist/logger'),
+  pathRewriter: require('../../dist/path-rewriter'),
+  router: require('../../dist/router')
+};

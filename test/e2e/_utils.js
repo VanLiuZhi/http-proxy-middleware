@@ -1,21 +1,21 @@
-var express = require('express')
-var proxyMiddleware = require('../../index')
+var express = require('express');
+var proxyMiddleware = require('../../dist/index');
 
 module.exports = {
   createServer: createServer,
   proxyMiddleware: proxyMiddleware
-}
+};
 
 function createServer(portNumber, middleware, path) {
-  var app = express()
+  var app = express();
 
   if (middleware && path) {
-    app.use(path, middleware)
+    app.use(path, middleware);
   } else if (middleware) {
-    app.use(middleware)
+    app.use(middleware);
   }
 
-  var server = app.listen(portNumber)
+  var server = app.listen(portNumber);
 
-  return server
+  return server;
 }

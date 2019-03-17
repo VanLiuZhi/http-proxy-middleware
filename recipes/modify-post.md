@@ -10,15 +10,17 @@ Since this only modifys the request body stream the original POST body parameter
 ## Example:
 
 ```js
-'use strict'
+'use strict';
 
-var express = require('express')
-var ProxyMiddleware = require('http-proxy-middleware')
-var router = express.Router()
+var express = require('express');
+var ProxyMiddleware = require('http-proxy-middleware');
+var router = express.Router();
 
 var proxy_filter = function(path, req) {
-  return path.match('^/docs') && (req.method === 'GET' || req.method === 'POST')
-}
+  return (
+    path.match('^/docs') && (req.method === 'GET' || req.method === 'POST')
+  );
+};
 
 var proxy_options = {
   target: 'http://localhost:8080',
@@ -28,10 +30,10 @@ var proxy_options = {
   onError(err, req, res) {
     res.writeHead(500, {
       'Content-Type': 'text/plain'
-    })
+    });
     res.end(
       'Something went wrong. And we are reporting a custom error message.' + err
-    )
+    );
   },
   onProxyReq(proxyReq, req, res) {
     if (req.method == 'POST' && req.body) {
@@ -40,42 +42,42 @@ var proxy_options = {
       // ....
 
       // Remove body-parser body object from the request
-      if (req.body) delete req.body
+      if (req.body) delete req.body;
 
       // Make any needed POST parameter changes
-      let body = new Object()
+      let body = new Object();
 
-      body.filename = 'reports/statistics/summary_2016.pdf'
-      body.routeid = 's003b012d002'
-      body.authid = 'bac02c1d-258a-4177-9da6-862580154960'
+      body.filename = 'reports/statistics/summary_2016.pdf';
+      body.routeid = 's003b012d002';
+      body.authid = 'bac02c1d-258a-4177-9da6-862580154960';
 
       // URI encode JSON object
       body = Object.keys(body)
         .map(function(key) {
-          return encodeURIComponent(key) + '=' + encodeURIComponent(body[key])
+          return encodeURIComponent(key) + '=' + encodeURIComponent(body[key]);
         })
-        .join('&')
+        .join('&');
 
       // Update header
-      proxyReq.setHeader('content-type', 'application/x-www-form-urlencoded')
-      proxyReq.setHeader('content-length', body.length)
+      proxyReq.setHeader('content-type', 'application/x-www-form-urlencoded');
+      proxyReq.setHeader('content-length', body.length);
 
       // Write out body changes to the proxyReq stream
-      proxyReq.write(body)
-      proxyReq.end()
+      proxyReq.write(body);
+      proxyReq.end();
     }
   }
-}
+};
 
 // Proxy configuration
-var proxy = ProxyMiddleware(proxy_filter, proxy_options)
+var proxy = ProxyMiddleware(proxy_filter, proxy_options);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Node.js Express Proxy Test' })
-})
+  res.render('index', { title: 'Node.js Express Proxy Test' });
+});
 
-router.all('/docs', proxy)
+router.all('/docs', proxy);
 
-module.exports = router
+module.exports = router;
 ```
